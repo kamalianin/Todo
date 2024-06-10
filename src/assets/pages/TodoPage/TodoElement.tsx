@@ -20,8 +20,9 @@ const TodoElementComponent = styled.div`
 const TodoElement: React.FC<TodoElementProps> = ({ todo }) => {
     const { checkTodo } = useStore();
     return (
-        <TodoElementComponent data-testid={`todo-item-${todo.id}`}>
+        <TodoElementComponent>
             <Checkbox
+                data-testid={`todo-item-${todo.id}`}
                 variant='circular'
                 onChange={() => checkTodo(todo.id)}
                 sx={{ width: '100%', padding: '10px' }}

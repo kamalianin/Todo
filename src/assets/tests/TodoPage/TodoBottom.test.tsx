@@ -3,7 +3,6 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TodoBottom from '../../pages/TodoPage/TodoBottom';
 import {useStore, Todo as TodoType} from '../../store';
-import TodoList from '../../pages/TodoPage/TodoList';
 
 interface MockedUseStore {
     todoList: TodoType[];
@@ -43,29 +42,24 @@ describe('TodoBottom component', () => {
     });
     test('Renders the undone todos count', () => {
         const todoList: TodoType[]  = [
-            {id: 1, name: 'Todo 1', checked: false},
-            {id: 2, name: 'Todo 2', checked: true},
-            {id: 3, name: 'Todo 3', checked: false},
+            {id: 0, name: 'Todo 1', checked: false},
+            {id: 1, name: 'Todo 2', checked: true},
+            {id: 2, name: 'Todo 3', checked: false},
         ];
         (useStore as unknown as jest.Mock<MockedUseStore, []>).mockReturnValue({
             todoList,
             clearCompletedTodos: jest.fn(),
         });
-        render(
-            <>
-                <TodoList todoList={todoList}/>
-                <TodoBottom/>
-            </>
-        );
+        render(<TodoBottom/>);
         expect(screen.getByText('2 items left')).toBeInTheDocument();
     });
 
 
     test('Filters the todo list based on the selected tab', () => {
         const todoList: TodoType[]  = [
-            {id: 1, name: 'Todo 1', checked: false},
-            {id: 2, name: 'Todo 2', checked: true},
-            {id: 3, name: 'Todo 3', checked: false},
+            {id: 0, name: 'Todo 1', checked: false},
+            {id: 1, name: 'Todo 2', checked: true},
+            {id: 2, name: 'Todo 3', checked: false},
         ];
 
         (useStore as unknown as jest.Mock<MockedUseStore, []>).mockReturnValue({
@@ -75,30 +69,31 @@ describe('TodoBottom component', () => {
         render(<TodoBottom/>);
 
         expect(screen.getByTestId('mocked-todo-list')).toBeInTheDocument();
+        expect(screen.getByTestId('todo-item-0')).toBeInTheDocument();
         expect(screen.getByTestId('todo-item-1')).toBeInTheDocument();
         expect(screen.getByTestId('todo-item-2')).toBeInTheDocument();
-        expect(screen.getByTestId('todo-item-3')).toBeInTheDocument();
 
         fireEvent.click(screen.getByText('Active'));
         expect(screen.getByTestId('mocked-todo-list')).toBeInTheDocument();
-        expect(screen.getByTestId('todo-item-1')).toBeInTheDocument();
-        expect(screen.queryByTestId('todo-item-2')).not.toBeInTheDocument();
-        expect(screen.getByTestId('todo-item-3')).toBeInTheDocument();
-        fireEvent.click(screen.getByText('Completed'));
-        expect(screen.getByTestId('mocked-todo-list')).toBeInTheDocument();
+        expect(screen.getByTestId('todo-item-0')).toBeInTheDocument();
         expect(screen.queryByTestId('todo-item-1')).not.toBeInTheDocument();
         expect(screen.getByTestId('todo-item-2')).toBeInTheDocument();
-        expect(screen.queryByTestId('todo-item-3')).not.toBeInTheDocument();
+        fireEvent.click(screen.getByText('Completed'));
+        expect(screen.getByTestId('mocked-todo-list')).toBeInTheDocument();
+        expect(screen.queryByTestId('todo-item-0')).not.toBeInTheDocument();
+        expect(screen.getByTestId('todo-item-1')).toBeInTheDocument();
+        expect(screen.queryByTestId('todo-item-2')).not.toBeInTheDocument();
     });
 
     test('Clears completed todos when the "Clear completed" button is clicked', () => {
         const todoList: TodoType[] = [
-            {id: 1, name: 'Todo 1', checked: false},
-            {id: 2, name: 'Todo 2', checked: true},
-            {id: 3, name: 'Todo 3', checked: false},
+            {id: 0, name: 'Todo 1', checked: false},
+            {id: 1, name: 'Todo 2', checked: true},
+            {id: 2, name: 'Todo 3', checked: false},
         ];
 
         let currentTodoList = todoList;
+
         const clearCompletedTodos = jest.fn(() => {
             currentTodoList = currentTodoList.filter((todo) => !todo.checked);
         });
@@ -111,9 +106,9 @@ describe('TodoBottom component', () => {
         const { rerender } = render(<TodoBottom />);
 
         expect(screen.getByTestId('mocked-todo-list')).toBeInTheDocument();
+        expect(screen.getByTestId('todo-item-0')).toBeInTheDocument();
         expect(screen.getByTestId('todo-item-1')).toBeInTheDocument();
         expect(screen.getByTestId('todo-item-2')).toBeInTheDocument();
-        expect(screen.getByTestId('todo-item-3')).toBeInTheDocument();
 
         fireEvent.click(screen.getByText('Clear completed'));
         expect(clearCompletedTodos).toHaveBeenCalled();
@@ -124,8 +119,8 @@ describe('TodoBottom component', () => {
         });
         rerender(<TodoBottom />);
 
-        expect(screen.getByTestId('todo-item-1')).toBeInTheDocument();
-        expect(screen.queryByTestId('todo-item-2')).not.toBeInTheDocument();
-        expect(screen.getByTestId('todo-item-3')).toBeInTheDocument();
+        expect(screen.getByTestId('todo-item-0')).toBeInTheDocument();
+        expect(screen.queryByTestId('todo-item-1')).not.toBeInTheDocument();
+        expect(screen.getByTestId('todo-item-2')).toBeInTheDocument();
     });
 });
