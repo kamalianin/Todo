@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1718029936604" clover="3.2.0">
+  <project timestamp="1718029936605" name="All files">
+    <metrics statements="34" coveredstatements="17" conditionals="5" coveredconditionals="0" methods="16" coveredmethods="3" elements="55" coveredelements="20" complexity="0" loc="34" ncloc="34" packages="1" files="4" classes="4"/>
+    <file name="Todo.tsx" path="E:\projects\mindbox\todo_test_mindbox\src\assets\pages\TodoPage\Todo.tsx">
+      <metrics statements="16" coveredstatements="8" conditionals="3" coveredconditionals="0" methods="7" coveredmethods="1"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="12" count="3" type="stmt"/>
+      <line num="14" count="2" type="stmt"/>
+      <line num="16" count="2" type="stmt"/>
+      <line num="18" count="2" type="stmt"/>
+      <line num="20" count="2" type="stmt"/>
+      <line num="21" count="0" type="stmt"/>
+      <line num="22" count="0" type="stmt"/>
+      <line num="25" count="2" type="stmt"/>
+      <line num="26" count="0" type="cond" truecount="0" falsecount="3"/>
+      <line num="28" count="0" type="stmt"/>
+      <line num="30" count="0" type="stmt"/>
+      <line num="32" count="0" type="stmt"/>
+      <line num="36" count="2" type="stmt"/>
+      <line num="49" count="0" type="stmt"/>
+      <line num="53" count="0" type="stmt"/>
+    </file>
+    <file name="TodoBottom.tsx" path="E:\projects\mindbox\todo_test_mindbox\src\assets\pages\TodoPage\TodoBottom.tsx">
+      <metrics statements="10" coveredstatements="5" conditionals="2" coveredconditionals="0" methods="5" coveredmethods="1"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="11" count="4" type="stmt"/>
+      <line num="13" count="4" type="stmt"/>
+      <line num="15" count="4" type="stmt"/>
+      <line num="16" count="0" type="stmt"/>
+      <line num="17" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="18" count="0" type="stmt"/>
+      <line num="21" count="4" type="stmt"/>
+      <line num="24" count="0" type="stmt"/>
+      <line num="31" count="0" type="stmt"/>
+    </file>
+    <file name="TodoElement.tsx" path="E:\projects\mindbox\todo_test_mindbox\src\assets\pages\TodoPage\TodoElement.tsx">
+      <metrics statements="5" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="19" count="1" type="stmt"/>
+      <line num="20" count="0" type="stmt"/>
+      <line num="21" count="0" type="stmt"/>
+      <line num="23" count="0" type="stmt"/>
+    </file>
+    <file name="TodoList.tsx" path="E:\projects\mindbox\todo_test_mindbox\src\assets\pages\TodoPage\TodoList.tsx">
+      <metrics statements="3" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="11" count="4" type="stmt"/>
+      <line num="13" count="0" type="stmt"/>
+    </file>
+  </project>
+</coverage>
