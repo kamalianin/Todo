@@ -38,7 +38,7 @@ const TodoBottom: React.FC = () => {
 
     return (
         <>
-            <TodoList todoList={filteredTodos} tabIndex={tabIndex} />
+            <TodoList todoList={filteredTodos} />
             <Box sx={{ padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
                 <Box>{undoneLength} items left</Box>
                 <Tabs onChange={handleTabChange} index={tabIndex}>

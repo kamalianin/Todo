@@ -2,8 +2,13 @@ import * as React from 'react';
 import {render, screen, fireEvent} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TodoBottom from '../../pages/TodoPage/TodoBottom';
-import {useStore} from '../../store';
+import {useStore, Todo as TodoType} from '../../store';
 import TodoList from '../../pages/TodoPage/TodoList';
+
+interface MockedUseStore {
+    todoList: TodoType[];
+    clearCompletedTodos: jest.Mock;
+}
 
 jest.mock('../../store', () => ({
     useStore: jest.fn(),
@@ -24,7 +29,7 @@ jest.mock('../../pages/TodoPage/TodoList', () => ({
             <div data-testid="mocked-todo-list">
                 {filteredTodos.map((todo) => (
                     <div key={todo.id} data-testid={`todo-item-${todo.id}`}>
-                        {todo.text}
+                        {todo.name}
                     </div>
                 ))}
             </div>
@@ -34,22 +39,22 @@ jest.mock('../../pages/TodoPage/TodoList', () => ({
 
 describe('TodoBottom component', () => {
     beforeEach(() => {
-        (useStore as jest.Mock).mockReset();
+        (useStore as unknown as jest.Mock<MockedUseStore, []>).mockReset();
     });
     test('Renders the undone todos count', () => {
-        const todoList = [
+        const todoList: TodoType[]  = [
             {id: 1, name: 'Todo 1', checked: false},
             {id: 2, name: 'Todo 2', checked: true},
             {id: 3, name: 'Todo 3', checked: false},
         ];
-        (useStore as jest.Mock).mockReturnValue({
+        (useStore as unknown as jest.Mock<MockedUseStore, []>).mockReturnValue({
             todoList,
             clearCompletedTodos: jest.fn(),
         });
         render(
             <>
                 <TodoList todoList={todoList}/>
-                <TodoBottom setTabActive={jest.fn()}/>
+                <TodoBottom/>
             </>
         );
         expect(screen.getByText('2 items left')).toBeInTheDocument();
@@ -57,13 +62,13 @@ describe('TodoBottom component', () => {
 
 
     test('Filters the todo list based on the selected tab', () => {
-        const todoList = [
+        const todoList: TodoType[]  = [
             {id: 1, name: 'Todo 1', checked: false},
             {id: 2, name: 'Todo 2', checked: true},
             {id: 3, name: 'Todo 3', checked: false},
         ];
 
-        (useStore as jest.Mock).mockReturnValue({
+        (useStore as unknown as jest.Mock<MockedUseStore, []>).mockReturnValue({
             todoList,
             clearCompletedTodos: jest.fn(),
         });
@@ -80,7 +85,6 @@ describe('TodoBottom component', () => {
         expect(screen.queryByTestId('todo-item-2')).not.toBeInTheDocument();
         expect(screen.getByTestId('todo-item-3')).toBeInTheDocument();
         fireEvent.click(screen.getByText('Completed'));
-
         expect(screen.getByTestId('mocked-todo-list')).toBeInTheDocument();
         expect(screen.queryByTestId('todo-item-1')).not.toBeInTheDocument();
         expect(screen.getByTestId('todo-item-2')).toBeInTheDocument();
@@ -88,23 +92,40 @@ describe('TodoBottom component', () => {
     });
 
     test('Clears completed todos when the "Clear completed" button is clicked', () => {
-        const todoList = [
-            {id: 1, text: 'Todo 1', checked: false},
-            {id: 2, text: 'Todo 2', checked: true},
-            {id: 3, text: 'Todo 3', checked: false},
+        const todoList: TodoType[] = [
+            {id: 1, name: 'Todo 1', checked: false},
+            {id: 2, name: 'Todo 2', checked: true},
+            {id: 3, name: 'Todo 3', checked: false},
         ];
-        const clearCompletedTodosMock = jest.fn();
-        (useStore as jest.Mock).mockReturnValue({
-            todoList,
-            clearCompletedTodos: clearCompletedTodosMock,
+
+        let currentTodoList = todoList;
+        const clearCompletedTodos = jest.fn(() => {
+            currentTodoList = currentTodoList.filter((todo) => !todo.checked);
         });
-        render(<TodoBottom/>);
+
+        (useStore as unknown as jest.Mock<MockedUseStore, []>).mockReturnValue({
+            todoList: currentTodoList,
+            clearCompletedTodos,
+        });
+
+        const { rerender } = render(<TodoBottom />);
 
         expect(screen.getByTestId('mocked-todo-list')).toBeInTheDocument();
         expect(screen.getByTestId('todo-item-1')).toBeInTheDocument();
         expect(screen.getByTestId('todo-item-2')).toBeInTheDocument();
         expect(screen.getByTestId('todo-item-3')).toBeInTheDocument();
+
         fireEvent.click(screen.getByText('Clear completed'));
-        expect(clearCompletedTodosMock).toHaveBeenCalled();
+        expect(clearCompletedTodos).toHaveBeenCalled();
+
+        (useStore as unknown as jest.Mock<MockedUseStore, []>).mockReturnValue({
+            todoList: currentTodoList,
+            clearCompletedTodos,
+        });
+        rerender(<TodoBottom />);
+
+        expect(screen.getByTestId('todo-item-1')).toBeInTheDocument();
+        expect(screen.queryByTestId('todo-item-2')).not.toBeInTheDocument();
+        expect(screen.getByTestId('todo-item-3')).toBeInTheDocument();
     });
 });
